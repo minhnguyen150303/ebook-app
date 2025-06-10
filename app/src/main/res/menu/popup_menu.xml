@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Tiêu đề người dùng -->
+    <item
+        android:id="@+id/menu_username"
+        android:title="👤 Username"
+        android:enabled="false" />
+
+    <item
+        android:id="@+id/menu_info"
+        android:title="Accout"
+        android:icon="@drawable/ic_info" />
+    <item
+        android:id="@+id/menu_user_management"
+        android:title="Quản lý người dùng"
+        android:icon="@drawable/ic_manage" />
+    <item
+        android:id="@+id/menu_change_password"
+        android:title="Đổi mật khẩu"
+        android:icon="@drawable/ic_lock2" />
+    <item
+        android:id="@+id/menu_logout"
+        android:title="Đăng xuất"
+        android:icon="@drawable/ic_logout" />
+</menu>
