@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.*;
 import com.example.ebook.R;
 import com.example.ebook.model.LoginRequest;
@@ -53,6 +54,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    String userId = response.body().getUser().getId();
+                    Log.d("SESSION", "Received userId = " + userId);
                     session.saveToken(response.body().getAccessToken());
                     session.saveUsername(response.body().getUser().getName());
                     session.saveUserId(response.body().getUser().getId());

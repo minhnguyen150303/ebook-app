@@ -37,12 +37,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         tvName = findViewById(R.id.tvName);
         tvEmail = findViewById(R.id.tvEmail);
-        tvPhone = findViewById(R.id.tvPhone);
-        tvGender = findViewById(R.id.tvGender);
-        tvDob = findViewById(R.id.tvDob);
+        tvPhone = findViewById(R.id.etPhone);
+        tvGender = findViewById(R.id.etGender);
+        tvDob = findViewById(R.id.etDob);
         avatarImage = findViewById(R.id.avatarImage);
         btnBack = findViewById(R.id.btnBack);
-        btnEdit = findViewById(R.id.editProfileButton);
+        btnEdit = findViewById(R.id.btnEdit);
 
         repository = new UserRepository();
 
@@ -79,9 +79,18 @@ public class ProfileActivity extends AppCompatActivity {
 
                     tvName.setText(user.getName());
                     tvEmail.setText(user.getEmail());
-                    tvPhone.setText(user.getPhone());
-                    tvGender.setText(formatGender(user.getGender()));
-                    tvDob.setText(formatDate(user.getDateOfBirth()));
+//                    tvPhone.setText(user.getPhone());
+//                    tvGender.setText(formatGender(user.getGender()));
+//                    tvDob.setText(formatDate(user.getDateOfBirth()));
+
+                    tvPhone.setText(user.getPhone() != null && !user.getPhone().isEmpty()
+                            ? user.getPhone() : "Chưa cập nhật!");
+
+                    tvGender.setText(user.getGender() != null && !user.getGender().isEmpty()
+                            ? formatGender(user.getGender()) : "Chưa cập nhật!");
+
+                    tvDob.setText(user.getDateOfBirth() != null && !user.getDateOfBirth().isEmpty()
+                            ? formatDate(user.getDateOfBirth()) : "Chưa cập nhật!");
 
                     if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
                         Glide.with(ProfileActivity.this)

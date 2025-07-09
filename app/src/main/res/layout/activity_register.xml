@@ -33,7 +33,7 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SIGN UP"
+            android:text="ĐĂNG KÝ"
             android:textColor="#FFFFFF"
             android:textSize="60sp"
             android:textStyle="bold"
@@ -73,7 +73,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:hint="User Name"
+            android:hint="Tên Người Dùng"
             app:startIconDrawable="@drawable/ic_person"
             app:startIconTint="@android:color/white"
             app:boxBackgroundMode="outline"
@@ -98,7 +98,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:hint="Password"
+            android:hint="Mật Khẩu"
             app:startIconDrawable="@drawable/ic_lock"
             app:startIconTint="@android:color/white"
             app:boxBackgroundMode="outline"
@@ -124,7 +124,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:hint="Repeat Password"
+            android:hint="Nhập Lại Mật Khẩu"
             app:startIconDrawable="@drawable/ic_lock"
             app:startIconTint="@android:color/white"
             app:boxBackgroundMode="outline"
@@ -163,14 +163,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cancel" />
+                android:text="Trở lại" />
 
             <Button
                 android:id="@+id/btnSubmit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Sign up" />
+                android:text="Đăng ký" />
         </LinearLayout>
 
 

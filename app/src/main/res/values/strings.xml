@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">EBook</string>
+
+    <string-array name="range_options">
+        <item>1 tuần</item>
+        <item>1 tháng</item>
+        <item>1 năm</item>
+    </string-array>
 </resources>

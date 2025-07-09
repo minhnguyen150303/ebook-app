@@ -2,17 +2,25 @@
     <!-- Tiêu đề người dùng -->
     <item
         android:id="@+id/menu_username"
-        android:title="👤 Username"
+        android:title="👤 Tên người dùng"
         android:enabled="false" />
 
     <item
         android:id="@+id/menu_info"
-        android:title="Accout"
+        android:title="Tài khoản"
         android:icon="@drawable/ic_info" />
     <item
         android:id="@+id/menu_user_management"
         android:title="Quản lý người dùng"
         android:icon="@drawable/ic_manage" />
+    <item
+        android:id="@+id/menu_category_management"
+        android:title="Quản lý sách"
+        android:icon="@drawable/ic_category" />
+    <item
+        android:id="@+id/menu_report"
+        android:title="Thống kê"
+        android:icon="@drawable/ic_chart" />
     <item
         android:id="@+id/menu_change_password"
         android:title="Đổi mật khẩu"

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    >
+    android:background="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,76 +17,108 @@
             android:id="@+id/imgAvatar"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/ic_avatar_placeholder"
-            android:scaleType="centerCrop"
-            android:background="@drawable/circle_background"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_avatar_placeholder"
+            android:background="@drawable/circle_background"
+            android:scaleType="centerCrop"
             android:clickable="true"
             android:focusable="true" />
 
-        <!-- Tên -->
-        <EditText
-            android:id="@+id/etName"
+        <!-- Họ tên -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Họ và tên"
-            android:inputType="textPersonName" />
+            app:boxBackgroundMode="outline">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:textColor="#000000"
+                android:textColorHint="#888888"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Số điện thoại -->
-        <EditText
-            android:id="@+id/etPhone"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Số điện thoại"
-            android:inputType="phone"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp"
+            app:startIconDrawable="@android:drawable/ic_menu_call"
+            app:boxBackgroundMode="outline">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:textColor="#000000"
+                android:textColorHint="#888888"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Giới tính -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Giới tính:"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp" />
+
         <RadioGroup
             android:id="@+id/rgGender"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp">
+
             <RadioButton
                 android:id="@+id/rbMale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nam" />
+                android:text="Nam"
+                android:textColor="#000000"/>
 
             <RadioButton
                 android:id="@+id/rbFemale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nữ" />
+                android:text="Nữ"
+                android:textColor="#000000"
+                android:layout_marginStart="24dp"/>
         </RadioGroup>
 
+
         <!-- Ngày sinh -->
-        <EditText
-            android:id="@+id/etDob"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Ngày sinh"
-            android:focusable="false"
-            android:clickable="true"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp"
+            app:startIconDrawable="@android:drawable/ic_menu_my_calendar"
+            app:boxBackgroundMode="outline">
 
-        <TextView
-            android:id="@+id/tvRole"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Role"
-            android:layout_marginTop="8dp"
-            android:textStyle="bold" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:clickable="true"
+                android:textColor="#000000"
+                android:textColorHint="#888888"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Nút Lưu -->
+        <!-- Nút hành động -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="24dp"
-            android:gravity="center"
+            android:gravity="end"
             android:weightSum="2">
 
             <Button
@@ -94,7 +126,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Quay lại" />
+                android:text="Quay lại"
+                android:backgroundTint="#7E57C2"
+                android:textColor="@android:color/white"
+                android:layout_marginEnd="8dp"/>
 
             <Button
                 android:id="@+id/btnSave"
@@ -102,9 +137,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Lưu thay đổi"
-                android:layout_marginStart="12dp" />
+                android:backgroundTint="#7E57C2"
+                android:textColor="@android:color/white"
+                android:layout_marginStart="8dp"/>
         </LinearLayout>
-
 
     </LinearLayout>
 </ScrollView>

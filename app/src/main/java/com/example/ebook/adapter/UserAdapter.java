@@ -50,11 +50,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         // Gán trạng thái nút
         holder.btnToggleStatus.setText(user.isActive() ? "Khóa" : "Mở");
 
-        holder.btnDelete.setOnClickListener(v -> {
-            Toast.makeText(context, "Xoá: " + user.getName(), Toast.LENGTH_SHORT).show();
-            // TODO: gọi API xoá user
-        });
-
         holder.btnToggleStatus.setOnClickListener(v -> {
             String token = new SessionManager(context).getToken();
             String userId = user.getId();
@@ -100,7 +95,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             super(itemView);
             tvUserName = itemView.findViewById(R.id.tvUserName);
             tvUserEmail = itemView.findViewById(R.id.tvUserEmail);
-            btnDelete = itemView.findViewById(R.id.btnDelete);
             btnToggleStatus = itemView.findViewById(R.id.btnToggleStatus);
         }
     }
