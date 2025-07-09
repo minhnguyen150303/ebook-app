@@ -2,6 +2,7 @@ package com.example.ebook.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class SessionManager {
     private SharedPreferences prefs;
@@ -28,13 +29,17 @@ public class SessionManager {
     }
 
     public void saveUserId(String userId) {
+        Log.d("SESSION", "Saving userId = " + userId);
         editor.putString("USER_ID", userId);
         editor.apply();
     }
 
     public String getUserId() {
-        return prefs.getString("USER_ID", null);
+        String id = prefs.getString("USER_ID", null);
+        Log.d("SESSION", "Getting userId = " + id);
+        return id;
     }
+
 
     public void saveUserInfo(String name, String email, String phone, String gender, String dob, String avatar) {
         editor.putString("USERNAME", name);

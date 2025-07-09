@@ -3,8 +3,15 @@ package com.example.ebook.model;
 import com.google.gson.annotations.SerializedName;
 
 public class User {
-    @SerializedName("_id")
+    @SerializedName("id")
     private String id;
+
+    @SerializedName("_id")
+    private String _id;
+
+    public String getId() {
+        return id != null ? id : _id;
+    }
     private String name;
     private String email;
     private String phone;
@@ -15,7 +22,6 @@ public class User {
     private String role;
 
     // Getters (hoặc thêm setters nếu cần)
-    public String getId() { return id; }
     public String getName() { return name; }
     public String getEmail() { return email; }
     public String getPhone() {

@@ -33,6 +33,14 @@
         <activity android:name=".view.ChangePasswordActivity"/>
         <activity android:name=".view.EditProfileActivity"/>
         <activity android:name=".view.UserManagementActivity"/>
+        <activity android:name=".view.CategoryManagementActivity" />
+        <activity android:name=".view.BookListByCategoryActivity" />
+        <activity android:name=".view.BookDetailActivity" />
+        <activity android:name=".view.ChapterReaderActivity" />
+        <activity android:name=".view.LibraryActivity" />
+        <activity android:name=".view.FavoriteActivity"/>
+        <activity android:name=".view.ReportActivity"/>
+        <activity android:name=".view.ChatActivity"/>
 
     </application>
 
