@@ -12,7 +12,6 @@ public class CommentRequest {
         this.rating = rating;
     }
 
-    // Getter và setter cho rating
     public float getRating() {
         return rating;
     }

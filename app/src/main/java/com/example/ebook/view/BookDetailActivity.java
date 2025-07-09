@@ -103,8 +103,8 @@ public class BookDetailActivity extends AppCompatActivity {
         }
 
         Socket socket = SocketManager.getSocket();
-        socket.connect(); // Kết nối socket
-        socket.emit("join-book", bookId); // Tham gia room theo bookId
+        socket.connect();
+        socket.emit("join-book", bookId);
 
         socket.on("new-comment", args -> runOnUiThread(() -> {
             Log.d("SOCKET", "new-comment nhận được");
@@ -324,67 +324,6 @@ public class BookDetailActivity extends AppCompatActivity {
         });
     }
 
-//    private void loadChapters() {
-//        BookApi bookApi = ApiClient.getClient(this).create(BookApi.class);
-//        bookApi.getChaptersByBook(bookId).enqueue(new Callback<Map<String, Object>>() {
-//            @Override
-//            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    List<Map<String, Object>> chapters = (List<Map<String, Object>>) response.body().get("chapters");
-//                    layoutChapters.removeAllViews();
-//
-//                    int limit = Math.min(9, chapters.size());
-//                    for (int i = 0; i < limit; i++) {
-//                        Map<String, Object> chap = chapters.get(i);
-//                        TextView tv = new TextView(BookDetailActivity.this);
-//                        tv.setText((String) chap.get("title"));
-//                        int chapterNumber = ((Double) chap.get("chapter_number")).intValue();
-//                        tv.setPadding(0, 16, 0, 16);
-//                        tv.setOnClickListener(v -> openChapter(chapterNumber));
-//                        layoutChapters.addView(tv);
-//                    }
-//
-//                    if (chapters.size() > 9) {
-//                        tvExpandChapters.setVisibility(View.VISIBLE);
-//                        final boolean[] isChaptersExpanded = {false};
-//
-//                        tvExpandChapters.setOnClickListener(v -> {
-//                            layoutChapters.removeAllViews();
-//                            if (!isChaptersExpanded[0]) {
-//                                for (Map<String, Object> chap : chapters) {
-//                                    TextView tv = new TextView(BookDetailActivity.this);
-//                                    tv.setText((String) chap.get("title"));
-//                                    int chapterNumber = ((Double) chap.get("chapter_number")).intValue();
-//                                    tv.setPadding(0, 16, 0, 16);
-//                                    tv.setOnClickListener(view -> openChapter(chapterNumber));
-//                                    layoutChapters.addView(tv);
-//                                }
-//                                tvExpandChapters.setText("Thu gọn");
-//                            } else {
-//                                for (int i = 0; i < 9; i++) {
-//                                    Map<String, Object> chap = chapters.get(i);
-//                                    TextView tv = new TextView(BookDetailActivity.this);
-//                                    tv.setText((String) chap.get("title"));
-//                                    int chapterNumber = ((Double) chap.get("chapter_number")).intValue();
-//                                    tv.setPadding(0, 16, 0, 16);
-//                                    tv.setOnClickListener(view -> openChapter(chapterNumber));
-//                                    layoutChapters.addView(tv);
-//                                }
-//                                tvExpandChapters.setText("Xem tất cả chương");
-//                            }
-//                            isChaptersExpanded[0] = !isChaptersExpanded[0];
-//                        });
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
-//                Log.e("CHAPTERS", "Lỗi lấy chương", t);
-//            }
-//        });
-//    }
-
     private void loadChapters() {
         BookApi bookApi = ApiClient.getClient(this).create(BookApi.class);
         bookApi.getChaptersByBook(bookId).enqueue(new Callback<Map<String, Object>>() {
@@ -407,7 +346,7 @@ public class BookDetailActivity extends AppCompatActivity {
 
         for (Map<String, Object> chap : allChapters) {
             TextView tv = new TextView(BookDetailActivity.this);
-            tv.setText((String) chap.get("title")); // Hoặc dùng custom format nếu muốn
+            tv.setText((String) chap.get("title"));
             tv.setTextSize(16);
             tv.setPadding(0, 16, 0, 16);
             int chapterNumber = ((Double) chap.get("chapter_number")).intValue();
@@ -430,10 +369,8 @@ public class BookDetailActivity extends AppCompatActivity {
         Call<CommentResponse> call;
 
         if ("admin".equals(role)) {
-            // 👑 Admin thấy tất cả bình luận, kể cả bị ẩn
             call = commentApi.getAllCommentsByBook(bookId);
         } else {
-            // 👤 User thường chỉ thấy bình luận đang hiện
             call = commentApi.getCommentsByBook(bookId);
         }
 
@@ -478,46 +415,16 @@ public class BookDetailActivity extends AppCompatActivity {
         updateCommentList();
     }
 
-//    private void submitComment() {
-//        String content = edtComment.getText().toString().trim();
-//        float rating = ratingBarInput.getRating();
-//
-//        if (content.isEmpty() || rating == 0f) {
-//            Toast.makeText(this, "Vui lòng nhập bình luận và chọn số sao", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        CommentRequest req = new CommentRequest(bookId, content, rating);
-//        req.setRating(rating); // ✅ Gửi số sao vào request
-//        Log.d("COMMENT_REQUEST", "Request: bookId = " + bookId + ", content = " + content + ", rating = " + rating);
-//
-//        commentApi.createComment(req).enqueue(new Callback<SingleCommentResponse>() {
-//            @Override
-//            public void onResponse(Call<SingleCommentResponse> call, Response<SingleCommentResponse> res) {
-//                if (res.isSuccessful() && res.body().isSuccess()) {
-//                    edtComment.setText("");
-//                    ratingBarInput.setRating(0f);
-//                    loadComments();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<SingleCommentResponse> call, Throwable t) {
-//                Toast.makeText(BookDetailActivity.this, "Lỗi khi gửi bình luận", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+
 private void submitComment() {
     String content = edtComment.getText().toString().trim();
-    float rating = ratingBarInput.getRating(); // Lấy số sao từ RatingBar
+    float rating = ratingBarInput.getRating();
 
-    // Kiểm tra nếu content hoặc rating không hợp lệ
     if (content.isEmpty() || rating == 0f) {
         Toast.makeText(this, "Vui lòng nhập bình luận và chọn số sao hợp lệ", Toast.LENGTH_SHORT).show();
         return;
     }
 
-    // Gửi yêu cầu tạo bình luận mới
     CommentRequest req = new CommentRequest(bookId, content, rating);
     Log.d("COMMENT_REQUEST", "Request: bookId = " + bookId + ", content = " + content + ", rating = " + rating);
 
@@ -525,9 +432,9 @@ private void submitComment() {
         @Override
         public void onResponse(Call<SingleCommentResponse> call, Response<SingleCommentResponse> res) {
             if (res.isSuccessful() && res.body().isSuccess()) {
-                edtComment.setText("");  // Reset lại trường nhập liệu
-                ratingBarInput.setRating(0f);  // Reset lại RatingBar
-                loadComments();  // Cập nhật lại danh sách bình luận
+                edtComment.setText("");
+                ratingBarInput.setRating(0f);
+                loadComments();
             } else {
                 Toast.makeText(BookDetailActivity.this, "Lỗi khi gửi bình luận", Toast.LENGTH_SHORT).show();
             }
@@ -546,7 +453,7 @@ private void submitComment() {
         commentApi.deleteComment(commentId).enqueue(new Callback<ApiResponse>() {
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> res) {
                 if (res.isSuccessful() && res.body().isSuccess()) {
-                    commentAdapter.removeComment(commentId); // ✅ xóa trên UI
+                    commentAdapter.removeComment(commentId);
                 }
             }
             public void onFailure(Call<ApiResponse> call, Throwable t) { }
@@ -566,63 +473,6 @@ private void submitComment() {
     }
 
 
-//    private void showEditDialog(Comment comment) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("Sửa bình luận");
-//
-//        final EditText input = new EditText(this);
-//        input.setText(comment.getComment());
-//        builder.setView(input);
-//
-//        builder.setPositiveButton("Lưu", (dialog, which) -> {
-//            String newContent = input.getText().toString().trim();
-//            if (!newContent.isEmpty()) {
-//                float newRating = ratingBarInput.getRating();
-//                CommentRequest req = new CommentRequest(bookId, newContent, newRating);
-//                Log.d("EDIT_COMMENT_REQUEST", "Request: bookId = " + bookId + ", content = " + newContent + ", rating = " + newRating);
-//                commentApi.updateComment(comment.get_id(), req).enqueue(new Callback<SingleCommentResponse>() {
-//                    public void onResponse(Call<SingleCommentResponse> call, Response<SingleCommentResponse> res) {
-//                        Log.d("EDIT_COMMENT", "Status code = " + res.code());
-//                        Log.d("EDIT_COMMENT", "Body = " + new Gson().toJson(res.body()));
-//                        if (res.isSuccessful() && res.body() != null && res.body().getComment() != null) {
-//                            Comment updated = res.body().getComment();
-//                            commentAdapter.updateComment(updated);
-//                            for (int i = 0; i < commentList.size(); i++) {
-//                                if (commentList.get(i).get_id().equals(updated.get_id())) {
-//                                    commentList.set(i, updated);
-//                                    break;
-//                                }
-//                            }
-//                            Toast.makeText(BookDetailActivity.this, "Đã sửa bình luận", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            String errorMsg = "Không thể sửa bình luận";
-//                            try {
-//                                if (res.errorBody() != null) {
-//                                    String errorJson = res.errorBody().string();
-//                                    Log.d("EDIT_COMMENT", "ErrorBody = " + (res.errorBody() != null ? res.errorBody().toString() : "null"));
-//                                    Map<String, Object> errorMap = new com.google.gson.Gson().fromJson(errorJson, Map.class);
-//                                    if (errorMap.get("message") != null) {
-//                                        errorMsg = errorMap.get("message").toString();
-//                                    }
-//                                }
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//                            Toast.makeText(BookDetailActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    public void onFailure(Call<SingleCommentResponse> call, Throwable t) {
-//                        Log.e("EDIT_COMMENT", "onFailure: " + t.getMessage(), t);
-//                        Toast.makeText(BookDetailActivity.this, "Lỗi sửa bình luận", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//        });
-//
-//        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
-//        builder.show();
-//    }
 private void showEditDialog(Comment comment) {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle("Sửa bình luận");
@@ -680,7 +530,7 @@ private void showEditDialog(Comment comment) {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(BookDetailActivity.this, "Cập nhật trạng thái người dùng thành công", Toast.LENGTH_SHORT).show();
-                    loadComments(); // ✅ Refresh lại comment
+                    loadComments();
                 } else {
                     Toast.makeText(BookDetailActivity.this, "Lỗi cập nhật trạng thái người dùng", Toast.LENGTH_SHORT).show();
                 }
