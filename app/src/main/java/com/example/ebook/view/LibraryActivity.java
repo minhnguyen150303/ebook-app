@@ -54,23 +54,39 @@ public class LibraryActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Map<String, Object>> bookmarks = (List<Map<String, Object>>) response.body().get("bookmarks");
+                    Object bookmarksObj = response.body().get("bookmarks");
 
-                    for (Map<String, Object> item : bookmarks) {
-                        Map<String, Object> bookData = (Map<String, Object>) item.get("book");
-                        Book book = new Book();
-                        book.setId((String) bookData.get("_id"));
-                        book.setTitle((String) bookData.get("title"));
-                        book.setAuthor((String) bookData.get("author"));
-                        book.setCoverUrl((String) bookData.get("cover_url"));
+                    if (bookmarksObj instanceof List) {
+                        List<Map<String, Object>> bookmarks = (List<Map<String, Object>>) bookmarksObj;
 
-                        addBookView(book);
+                        if (bookmarks.isEmpty()) {
+                            Toast.makeText(LibraryActivity.this, "Bạn chưa đánh dấu sách nào", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        for (Map<String, Object> item : bookmarks) {
+                            if (item.get("book") instanceof Map) {
+                                Map<String, Object> bookData = (Map<String, Object>) item.get("book");
+
+                                Book book = new Book();
+                                book.setId((String) bookData.get("_id"));
+                                book.setTitle((String) bookData.get("title"));
+                                book.setAuthor((String) bookData.get("author"));
+                                book.setCoverUrl((String) bookData.get("cover_url"));
+
+                                addBookView(book);
+                            }
+                        }
+                    } else {
+                        Toast.makeText(LibraryActivity.this, "Dữ liệu không đúng định dạng", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
                     Toast.makeText(LibraryActivity.this, "Không có sách đang đọc", Toast.LENGTH_SHORT).show();
+                    Log.e("LibraryActivity", "Lỗi response: " + response.message());
                 }
             }
+
 
             @Override
             public void onFailure(Call<Map<String, Object>> call, Throwable t) {

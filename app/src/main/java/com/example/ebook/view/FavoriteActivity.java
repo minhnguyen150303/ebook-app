@@ -49,23 +49,38 @@ public class FavoriteActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Map<String, Object>> favorites = (List<Map<String, Object>>) response.body().get("favorites");
+                    Object favoritesObj = response.body().get("favorites");
 
-                    for (Map<String, Object> item : favorites) {
-                        Map<String, Object> bookData = (Map<String, Object>) item.get("book");
-                        Book book = new Book();
-                        book.setId((String) bookData.get("_id"));
-                        book.setTitle((String) bookData.get("title"));
-                        book.setAuthor((String) bookData.get("author"));
-                        book.setCoverUrl((String) bookData.get("cover_url"));
+                    if (favoritesObj instanceof List) {
+                        List<Map<String, Object>> favorites = (List<Map<String, Object>>) favoritesObj;
 
-                        addBookView(book);
+                        if (favorites.isEmpty()) {
+                            Toast.makeText(FavoriteActivity.this, "Bạn chưa yêu thích cuốn sách nào", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        for (Map<String, Object> item : favorites) {
+                            if (item.get("book") instanceof Map) {
+                                Map<String, Object> bookData = (Map<String, Object>) item.get("book");
+
+                                Book book = new Book();
+                                book.setId((String) bookData.get("_id"));
+                                book.setTitle((String) bookData.get("title"));
+                                book.setAuthor((String) bookData.get("author"));
+                                book.setCoverUrl((String) bookData.get("cover_url"));
+
+                                addBookView(book);
+                            }
+                        }
+                    } else {
+                        Toast.makeText(FavoriteActivity.this, "Dữ liệu không đúng định dạng", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
                     Toast.makeText(FavoriteActivity.this, "Bạn chưa yêu thích cuốn sách nào", Toast.LENGTH_SHORT).show();
                 }
             }
+
 
             @Override
             public void onFailure(Call<Map<String, Object>> call, Throwable t) {
