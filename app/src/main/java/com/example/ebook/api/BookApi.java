@@ -41,8 +41,7 @@ public interface BookApi {
     @GET("book/get-all")
     Call<Map<String, Object>> getAllBooks();
 
-
-
-
+    @GET("book/no-view/{id}")
+    Call<Map<String, Object>> getBookByIdNoView(@Path("id") String id);
 }
 
