@@ -57,6 +57,7 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerSearchResults;
     private GridBookAdapter searchAdapter;
     private List<Book> allBooks = new ArrayList<>();
+    private int pendingCategoryCount = 0;
 
 
 
@@ -76,9 +77,6 @@ public class HomeActivity extends AppCompatActivity {
 
         layoutHome = findViewById(R.id.layoutCategories);
 
-        loadTopBooks();
-        loadAllCategoriesWithBooks();
-
         recyclerSearchResults = findViewById(R.id.recyclerSearchResults);
         recyclerSearchResults.setLayoutManager(new GridLayoutManager(this, 3));
         searchAdapter = new GridBookAdapter(this, new ArrayList<>(), book -> {
@@ -96,12 +94,13 @@ public class HomeActivity extends AppCompatActivity {
         nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
             for (Map.Entry<View, String> entry : viewToTitleMap.entrySet()) {
                 View section = entry.getKey();
+                String title = entry.getValue();
                 int[] location = new int[2];
                 section.getLocationOnScreen(location);
                 int y = location[1];
 
-                if (y > 200 && y < 600) { // Nếu section nằm trong khoảng "giữa màn hình"
-                    String title = entry.getValue();
+                int screenHeight = nestedScrollView.getHeight();
+                if (y >= 0 && y <= screenHeight * 2 / 3) {
                     highlightTab(title);
                     break;
                 }
@@ -138,6 +137,16 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
         bottomNav.setSelectedItemId(R.id.nav_home);
+
+        // Clear layout và reload lại dữ liệu
+        layoutHome.removeAllViews();
+        sectionViewsMap.clear();
+        viewToTitleMap.clear();
+        categoryTabs.removeAllViews();
+        currentSelectedTab = null;
+
+        loadTopBooks();
+        loadAllCategoriesWithBooks();
     }
 
 
@@ -280,7 +289,7 @@ public class HomeActivity extends AppCompatActivity {
     private void fetchBookDetails(Book book, List<Book> targetList, Runnable onComplete) {
         BookApi bookApi = ApiClient.getClient(this).create(BookApi.class);
         Log.d("DEBUG", "Lấy chi tiết sách: " + book.getId());
-        bookApi.getBookById(book.getId()).enqueue(new Callback<Map<String, Object>>() {
+        bookApi.getBookByIdNoView(book.getId()).enqueue(new Callback<Map<String, Object>>() {
             @Override
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                 if (response.body() == null) {
@@ -336,6 +345,62 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+//    private void loadAllCategoriesWithBooks() {
+//        CategoryApi categoryApi = ApiClient.getClient(this).create(CategoryApi.class);
+//        categoryApi.getAllCategories().enqueue(new Callback<Map<String, Object>>() {
+//            @Override
+//            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    List<Map<String, Object>> categories = (List<Map<String, Object>>) response.body().get("categories");
+//                    for (Map<String, Object> map : categories) {
+//                        String id = (String) map.get("_id");
+//                        String name = (String) map.get("name");
+//                        loadBooksByCategory(id, name);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+//                Toast.makeText(HomeActivity.this, "Lỗi tải thể loại", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+//
+//    private void loadBooksByCategory(String categoryId, String categoryName) {
+//        BookApi bookApi = ApiClient.getClient(this).create(BookApi.class);
+//        bookApi.getAllBooksByCategory(categoryId).enqueue(new Callback<Map<String, Object>>() {
+//            @Override
+//            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    List<Map<String, Object>> data = (List<Map<String, Object>>) response.body().get("books");
+//                    List<Book> books = new ArrayList<>();
+//                    final int total = data.size();
+//                    final int[] count = {0};
+//
+//                    for (Map<String, Object> item : data) {
+//                        Book book = new Book();
+//                        book.setId((String) item.get("_id"));
+//
+//                        fetchBookDetails(book, books, () -> {
+//                            count[0]++;
+//                            if (count[0] == total) {
+//                                addSection(categoryName, books);
+//                            }
+//                        });
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+//                Toast.makeText(HomeActivity.this, "Lỗi tải sách theo thể loại", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+//
+//    private int pendingCategoryCount = 0;
+
     private void loadAllCategoriesWithBooks() {
         CategoryApi categoryApi = ApiClient.getClient(this).create(CategoryApi.class);
         categoryApi.getAllCategories().enqueue(new Callback<Map<String, Object>>() {
@@ -343,6 +408,8 @@ public class HomeActivity extends AppCompatActivity {
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Map<String, Object>> categories = (List<Map<String, Object>>) response.body().get("categories");
+                    pendingCategoryCount = categories.size();
+
                     for (Map<String, Object> map : categories) {
                         String id = (String) map.get("_id");
                         String name = (String) map.get("name");
@@ -377,8 +444,22 @@ public class HomeActivity extends AppCompatActivity {
                             count[0]++;
                             if (count[0] == total) {
                                 addSection(categoryName, books);
+
+                                // 👇 Kiểm tra khi load xong tất cả thể loại
+                                pendingCategoryCount--;
+                                if (pendingCategoryCount == 0) {
+                                    ensureScrollableToBottom();
+                                }
                             }
                         });
+                    }
+
+                    // Trường hợp không có sách
+                    if (data.isEmpty()) {
+                        pendingCategoryCount--;
+                        if (pendingCategoryCount == 0) {
+                            ensureScrollableToBottom();
+                        }
                     }
                 }
             }
@@ -389,6 +470,9 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
 
 //    private void addSection(String title, List<Book> books) {
 //        View sectionView = getLayoutInflater().inflate(R.layout.section_horizontal_books, layoutHome, false);
@@ -477,13 +561,46 @@ public class HomeActivity extends AppCompatActivity {
         addCategoryTab(title, v -> scrollToSection(title));
     }
 
+    private void ensureScrollableToBottom() {
+        layoutHome.post(() -> {
+            int contentHeight = layoutHome.getHeight();
+            int scrollViewHeight = nestedScrollView.getHeight();
+
+            int maxScroll = contentHeight - scrollViewHeight;
+
+            // Nếu maxScroll < vị trí section cuối, thêm view trắng
+            int highestSectionBottom = 0;
+            for (View v : sectionViewsMap.values()) {
+                int bottom = v.getBottom();
+                if (bottom > highestSectionBottom) {
+                    highestSectionBottom = bottom;
+                }
+            }
+
+            if (highestSectionBottom > maxScroll + scrollViewHeight) {
+                // Đã đủ dài → không cần thêm
+                return;
+            }
+
+            int requiredSpace = (highestSectionBottom + 200) - (maxScroll + scrollViewHeight);
+            if (requiredSpace > 0) {
+                Log.d("SCROLL_DEBUG", "➕ Thêm khoảng trắng cuối: " + requiredSpace + "px");
+                View spacer = new View(this);
+                spacer.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        requiredSpace
+                ));
+                layoutHome.addView(spacer);
+            }
+        });
+    }
 
     private void addCategoryTab(String title, View.OnClickListener onClick) {
         TextView tab = new TextView(this);
         tab.setText(title);
         tab.setPadding(32, 16, 32, 16);
         tab.setTextSize(16);
-        tab.setBackgroundResource(R.drawable.tab_background); // drawable bo góc
+        tab.setBackgroundResource(R.drawable.tab_background);
         tab.setTextColor(getResources().getColor(R.color.black));
         tab.setOnClickListener(onClick);
 
@@ -497,35 +614,72 @@ public class HomeActivity extends AppCompatActivity {
         categoryTabs.addView(tab);
     }
 
+
+//    private void scrollToSection(String title) {
+//        View section = sectionViewsMap.get(title);
+//        if (section != null) {
+//            nestedScrollView.post(() -> {
+//                int y = section.getTop() - 100; // scroll trừ đi 100px để đẹp
+//                nestedScrollView.smoothScrollTo(0, y);
+//            });
+//        }
+//    }
+
     private void scrollToSection(String title) {
         View section = sectionViewsMap.get(title);
         if (section != null) {
-            nestedScrollView.post(() -> {
-                int y = section.getTop() - 100; // scroll trừ đi 100px để đẹp
-                nestedScrollView.smoothScrollTo(0, y);
-            });
+            // 👉 Delay nhẹ để đảm bảo layout đã xong (tránh getTop() bị sai)
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                int targetY = section.getTop() - 100;
+
+                int contentHeight = layoutHome.getHeight();
+                int scrollViewHeight = nestedScrollView.getHeight();
+                int maxScroll = contentHeight - scrollViewHeight;
+
+                int scrollToY = Math.min(targetY, maxScroll);
+                if (scrollToY < 0) scrollToY = 0;
+
+                Log.d("SCROLL_DEBUG", "==> Scroll đến section: " + title);
+                Log.d("SCROLL_DEBUG", "section.getTop() = " + section.getTop());
+                Log.d("SCROLL_DEBUG", "targetY = " + targetY);
+                Log.d("SCROLL_DEBUG", "contentHeight = " + contentHeight);
+                Log.d("SCROLL_DEBUG", "scrollViewHeight = " + scrollViewHeight);
+                Log.d("SCROLL_DEBUG", "maxScroll = " + maxScroll);
+                Log.d("SCROLL_DEBUG", "scrollToY = " + scrollToY);
+
+                nestedScrollView.smoothScrollTo(0, scrollToY);
+            }, 200); // delay 200ms
         }
     }
 
+
+
+
+
     private void highlightTab(String title) {
         for (int i = 0; i < categoryTabs.getChildCount(); i++) {
-            TextView tab = (TextView) categoryTabs.getChildAt(i);
+            View child = categoryTabs.getChildAt(i);
+
+            // ✅ Bỏ qua những view không phải là tab (ví dụ: spacer)
+            if (!(child instanceof TextView)) continue;
+
+            TextView tab = (TextView) child;
             if (tab.getText().toString().equals(title)) {
-                // Nếu tab mới khác tab cũ thì đổi màu
                 if (currentSelectedTab != tab) {
                     if (currentSelectedTab != null) {
-                        currentSelectedTab.setBackgroundResource(R.drawable.tab_background); // mặc định
+                        currentSelectedTab.setBackgroundResource(R.drawable.tab_background);
                     }
-                    tab.setBackgroundResource(R.drawable.tab_selected_background); // đang chọn
+                    tab.setBackgroundResource(R.drawable.tab_selected_background);
                     currentSelectedTab = tab;
 
-                    // Đảm bảo tab nằm trong tầm nhìn
+                    // Đảm bảo tab được focus nếu nằm ngoài tầm nhìn
                     tab.getParent().requestChildFocus(tab, tab);
                 }
                 break;
             }
         }
     }
+
 
     private void fetchAllBooksForSearch() {
         BookApi bookApi = ApiClient.getClient(this).create(BookApi.class);

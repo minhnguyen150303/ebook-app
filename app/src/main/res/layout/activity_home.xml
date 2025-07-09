@@ -44,6 +44,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="300dp"
         android:background="@android:color/white"
         app:layout_constraintTop_toBottomOf="@id/horizontalCategoryScroll"
         app:layout_constraintBottom_toTopOf="@id/bottomNav"
@@ -51,13 +53,17 @@
         app:layout_constraintEnd_toEndOf="parent">
 
 
+
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:clipChildren="false"
+            android:descendantFocusability="blocksDescendants">
 
-            <!-- Danh sách thể loại -->
+
+        <!-- Danh sách thể loại -->
             <LinearLayout
                 android:id="@+id/layoutCategories"
                 android:layout_width="match_parent"
