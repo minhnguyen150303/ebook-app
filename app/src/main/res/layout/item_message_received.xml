@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:gravity="start"
+    android:orientation="horizontal">
+
+<ImageView
+android:id="@+id/imgAvatar"
+android:layout_width="36dp"
+android:layout_height="36dp"
+android:src="@mipmap/ic_launcher_round"
+android:scaleType="centerCrop"
+android:layout_marginEnd="8dp"/>
+
+<LinearLayout
+android:id="@+id/boxBubble"
+android:orientation="vertical"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:background="@drawable/bg_bubble_received"
+android:padding="10dp"
+android:layout_marginStart="8dp"
+android:layout_marginEnd="48dp">
+
+<TextView
+    android:id="@+id/tvName"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Người A"
+    android:textStyle="bold"
+    android:textColor="#FFFFFF"
+    android:textSize="14sp"/>
+
+<TextView
+    android:id="@+id/tvContent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Nội dung..."
+    android:textSize="14sp"
+    android:layout_marginTop="4dp"
+    android:textColor="#EDEDED"/>
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="12:34"
+        android:textSize="11sp"
+        android:textColor="#9AA0A6"
+        android:gravity="start"/>
+
+</LinearLayout>
+    </LinearLayout>

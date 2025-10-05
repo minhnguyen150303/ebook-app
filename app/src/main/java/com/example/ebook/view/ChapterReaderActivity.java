@@ -176,7 +176,6 @@ public class ChapterReaderActivity extends AppCompatActivity {
                         chapterTitles[i] = (String) chap.get("title");
                     }
 
-                    // ✅ Tạo adapter tùy chỉnh để tăng padding giữa các item
                     AlertDialog.Builder builder = new AlertDialog.Builder(ChapterReaderActivity.this);
                     builder.setTitle("Danh sách chương");
 

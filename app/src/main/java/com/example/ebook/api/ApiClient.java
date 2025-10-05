@@ -2,6 +2,7 @@ package com.example.ebook.api;
 
 import android.content.Context;
 
+import com.example.ebook.BuildConfig;
 import com.example.ebook.utils.SessionManager;
 
 import java.io.IOException;
@@ -46,5 +47,19 @@ public class ApiClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
+
+    // Trả về base URL cho ảnh (ví dụ bạn có thể dùng chung BASE_URL luôn)
+    public static String getBaseUrlForImages() {
+        return BuildConfig.BASE_IMAGE_URL;
+        // hoặc nếu chưa có BASE_IMAGE_URL thì return BuildConfig.BASE_URL;
+    }
+
+    // Ghép link ảnh đầy đủ từ BE
+    public static String buildImageUrl(String maybeRelative) {
+        if (maybeRelative == null || maybeRelative.isEmpty()) return null;
+        if (maybeRelative.startsWith("http")) return maybeRelative;
+        return getBaseUrlForImages() + maybeRelative;
+    }
+
 }
 

@@ -18,6 +18,13 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:5000/\"")
+        buildConfigField("String", "BASE_IMAGE_URL", "\"http://10.0.2.2:5000/\"")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {

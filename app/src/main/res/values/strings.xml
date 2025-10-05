@@ -1,5 +1,10 @@
 <resources>
-    <string name="app_name">EBook</string>
+        <string name="app_name">EBook</string>
+        <string name="back">Back</string>
+        <string name="send">Gửi</string>
+        <string name="hint_message">Nhập tin nhắn…</string>
+        <string name="avatar">Avatar</string>
+
 
     <string-array name="range_options">
         <item>1 tuần</item>

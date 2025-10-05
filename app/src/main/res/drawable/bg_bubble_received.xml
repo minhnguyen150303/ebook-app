@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#673AB7"/> <!-- tím mờ giống ảnh bạn -->
+    <corners android:radius="12dp"/>
+    <padding android:left="8dp" android:top="6dp" android:right="8dp" android:bottom="6dp"/>
+</shape>
