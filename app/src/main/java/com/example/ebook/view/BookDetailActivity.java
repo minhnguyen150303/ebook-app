@@ -356,8 +356,6 @@ public class BookDetailActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void openChapter(int chapterNumber) {
         Intent intent = new Intent(BookDetailActivity.this, ChapterReaderActivity.class);
         intent.putExtra("book_id", bookId);

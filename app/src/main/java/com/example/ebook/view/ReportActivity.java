@@ -252,9 +252,9 @@ public class ReportActivity extends AppCompatActivity {
                     xAxis.setGranularity(1f);
                     xAxis.setLabelRotationAngle(0f);
 
-                    xAxis.setTextSize(14f);  // kích thước chữ
-                    xAxis.setTextColor(Color.BLACK);  // màu chữ
-                    xAxis.setTypeface(Typeface.DEFAULT_BOLD); // in đậm nếu muốn
+                    xAxis.setTextSize(14f);
+                    xAxis.setTextColor(Color.BLACK);
+                    xAxis.setTypeface(Typeface.DEFAULT_BOLD);
 
                     xAxis.setValueFormatter(new ValueFormatter() {
                         @Override
@@ -264,7 +264,7 @@ public class ReportActivity extends AppCompatActivity {
                                 String fullDate = labels.get(index); // vd: "30-06-2025"
                                 String[] parts = fullDate.split("-");
                                 if (parts.length == 3) {
-                                    return parts[0] + "-" + parts[1]; // chỉ lấy "dd-MM"
+                                    return parts[0] + "-" + parts[1];
                                 }
                                 return fullDate;
                             }

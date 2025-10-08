@@ -74,7 +74,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         String role = sessionManager.getRole();
 
-// Nếu là admin và bình luận bị ẩn thì hiển thị mờ
+        // Nếu là admin và bình luận bị ẩn thì hiển thị mờ
         if ("admin".equals(role) && comment.isHidden()) {
             holder.tvContent.setAlpha(0.5f);
             holder.tvName.setAlpha(0.5f);
@@ -89,8 +89,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             holder.tvContent.setText(comment.getComment());
             holder.tvContent.setTextColor(context.getResources().getColor(android.R.color.black)); // ⚫ mặc định
         }
-
-
 
         // Format thời gian
         String formattedTime = formatTime(comment.getCreated_at());
@@ -108,7 +106,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                     popup.getMenu().add(comment.getUser().isActive() ? "Khóa người dùng" : "Mở khóa người dùng");
                 }
             }
-
 
             // Chỉ khi ID user hiện tại = ID người viết comment
             if (comment.getUser() != null && userId != null && userId.equals(comment.getUser().getId())) {
